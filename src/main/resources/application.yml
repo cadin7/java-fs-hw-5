@@ -1,0 +1,5 @@
+country:
+  filePath: src/main/resources/countries.txt
+spring:
+  profiles:
+    active: memory

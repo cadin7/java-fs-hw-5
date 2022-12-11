@@ -55,7 +55,6 @@ public class CountryController {
 
     @GetMapping("mine")
     Country getMyCountry() {
-        return service.getMyCountry()
-                .orElseThrow(() -> new CountryNotFoundException(format(NO_COUNTRY_ID, "MyCountry")));
+        return service.getMyCountry();
     }
 }

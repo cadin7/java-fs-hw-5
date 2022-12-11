@@ -3,18 +3,22 @@ package ro.fasttrackit.javafshw5.service;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import ro.fasttrackit.javafshw5.exceptions.CountryNotFoundException;
 import ro.fasttrackit.javafshw5.model.Country;
 import ro.fasttrackit.javafshw5.reader.CountryReader;
 import ro.fasttrackit.javafshw5.repository.CountryRepository;
 
 import java.util.*;
 
+import static java.lang.String.format;
 import static java.util.Collections.unmodifiableList;
 import static java.util.stream.Collectors.*;
 
 @Service
 @RequiredArgsConstructor
 public class CountryService {
+    private static final String NO_COUNTRY = "There is no country with name: %s ";
+
     private final CountryReader countryReader;
     private final CountryRepository countries;
     private final CountryContext context;
@@ -75,10 +79,11 @@ public class CountryService {
                         toUnmodifiableList()));
     }
 
-    public Optional<Country> getMyCountry() {
+    public Country getMyCountry() {
         return getCountries().stream()
                 .filter(country -> country.getName().equalsIgnoreCase(context.getMyCountryName()))
-                .findFirst();
+                .findFirst()
+                .orElseThrow(() -> new CountryNotFoundException(format(NO_COUNTRY, context.getMyCountryName())));
     }
 
     @PostConstruct
